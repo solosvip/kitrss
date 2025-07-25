@@ -16,7 +16,7 @@
 body {
     margin: 0;
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
     color: hsl(var(--foreground));
     overflow: hidden;
 }
@@ -135,7 +135,7 @@ body {
 }
 
 .stat-card:hover {
-    background: hsl(var(--accent));
+    background: #ebebeb;
 }
 
 .stat-card-header {
@@ -178,80 +178,245 @@ body {
     letter-spacing: 0.05em;
 }
 
-.feed-item {
+.folder-actions {
     display: flex;
-    align-items: center;
-    padding: 0.75rem 0.6rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-radius: var(--global-radius);
-    margin: 0.125rem 0;
-    position: relative;
+    gap: 8px;
+    padding: 8px 16px;
+    margin-bottom: 4px;
 }
 
-.feed-item.active {
-    background-color: #ebebeb;
-    border-left: 3px solid var(--primary);
-    padding-left: calc(0.6rem - 3px);
-    padding-right: 0.6rem;
-}
-
-.feed-item:hover {
-    background-color: #ebebeb;
-}
-.feed-actions {
-    display: none;
-    gap: 0.25rem;
-    margin-left: auto;
-}
-
-.feed-item:hover .feed-actions {
-    display: flex;
-}
-
-.feed-item:hover .feed-count {
-    display: none;
-}
-
-.action-btn {
-    padding: 0.25rem;
-    font-size: 0.875rem;
-    color: #666;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.action-btn:hover {
-    color: var(--primary);
-}
-
-.feed-icon {
-    font-size: 0.875rem;
-    width: 1.5rem;
-    text-align: center;
-    flex-shrink: 0;
+.folder-actions .btn-icon {
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 5px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.folder-actions .btn-icon:hover {
+    background: #ebebeb;
+    color: #374151;
+}
+
+.folder-item {
+    margin: 0;
+    user-select: none;
+}
+
+.folder-header {
+    display: flex;
+    align-items: center;
+    padding: 0px 12px 0px 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    height: 34px;
+}
+
+.folder-header:hover {
+    background: #ebebeb !important;
+}
+
+.folder-header.active {
+    background: rgba(139, 92, 246, 0.12);
+    border-left: 3px solid #8b5cf6;
+    padding-left: 2px;
+}
+
+/* 文件夹展开时背景色 */
+.folder-item:not(:has(.folder-children.collapsed)) > .folder-header {
+    background: #ebebeb;
+}
+
+.folder-item:not(:has(.folder-children.collapsed)) > .folder-header:hover {
+    background: #ebebeb !important;
+}
+
+.folder-toggle {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 2px;
+    margin-right: 8px;
+    transition: transform 0.2s ease;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.folder-toggle.collapsed {
+    transform: rotate(-90deg);
+}
+
+.folder-name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: auto;
+}
+
+.folder-count {
+    font-size: 11px;
+    color: #6b7280;
+    background: transparent;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 8px;
+    margin-right: 0;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+}
+
+.folder-actions {
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+    position: absolute;
+    right: 12px;
+    background: none;
+    padding: 0 4px;
+}
+
+.folder-header:hover .folder-count {
+    opacity: 0;
+}
+
+.folder-header:hover .folder-actions {
+    opacity: 1;
+}
+
+.folder-children {
+    margin-left: 0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.folder-children.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* 基于层级的缩进 - 简化为单层，统一缩进 */
+.folder-item > .folder-header {
+    padding-left: 5px;
+}
+
+.feed-item {
+    display: flex;
+    align-items: center;
+    padding: 0px 12px 0px 5px;
+    margin: 1px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    height: 34px;
+}
+
+.feed-item:hover {
+    background: #ebebeb;
+}
+
+.feed-item.active {
+    background: rgba(139, 92, 246, 0.15);
+    border-left: 3px solid #8b5cf6;
+    padding-left: 2px;
+    font-weight: 600;
+}
+
+.feed-item.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.feed-item.drag-over {
+    border: 2px dashed hsl(var(--ring));
+    background: hsla(var(--ring), 0.1);
+}
+
+.feed-icon {
+    margin-right: 8px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
 }
 
 .feed-name {
     flex: 1;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: auto;
 }
 
 .feed-count {
-    font-size: 0.75rem;
+    font-size: 12px;
+    color: #6b7280;
+    background: transparent;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    margin-right: 0;
+    transition: opacity 0.2s ease;
+}
+
+.feed-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    position: absolute;
+    right: 12px;
+    background: none;
+    padding: 0 4px;
+}
+
+.feed-item:hover .feed-count {
+    opacity: 0;
+}
+
+.feed-item:hover .feed-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    color: hsl(var(--foreground));
+    background: none;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-btn:disabled:hover {
+    background: none;
     color: hsl(var(--muted-foreground));
-    font-weight: 500;
 }
 
 /* 文章列表 */
@@ -321,12 +486,12 @@ body {
 }
 
 .article-item:hover {
-    background: hsl(var(--accent));
+    background: #ebebeb;
 }
 
 .article-item.active {
-    background: hsl(var(--accent));
-    border-left: 3px solid hsl(var(--ring));
+    background: rgba(139, 92, 246, 0.12);
+    border-left: 3px solid #8b5cf6;
 }
 
 .article-item.unread {
@@ -515,11 +680,4 @@ body {
     border: 1px solid hsl(var(--border));
     z-index: 1000;
     margin-top: 0.125rem;
-}
-
-/* Font Awesome图标样式 */
-.btn-icon i,
-.theme-toggle i {
-    font-size: 0.75rem;
-    line-height: 1;
 }

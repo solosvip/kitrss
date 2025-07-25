@@ -72,70 +72,155 @@
                 </div>
             </div>
             
-            <div class="feeds-section">
-                <div class="feed-item active" data-feed="all">
-                    <i class="feed-icon fas fa-globe" style="color: #8b5cf6;"></i>
-                    <span class="feed-name">所有文章</span>
-                    <span class="feed-count">766</span>
-                    <div class="feed-actions">
-                        <button class="btn-icon action-btn" onclick="editFeed('all')" title="编辑">
-                            <i class="fas fa-edit"></i>
+            <div class="folder-actions">
+                <button class="btn-icon" onclick="createFolder()" title="新建文件夹">
+                    <i class="fas fa-folder-plus"></i>
+                </button>
+                <button class="btn-icon" onclick="toggleAllFolders()" title="全部折叠/展开">
+                    <i class="fas fa-compress-arrows-alt"></i>
+                </button>
+            </div>
+            
+            <div class="feeds-section" id="folderTree">
+                <!-- 文件夹树形结构 -->
+                <div class="folder-item" data-folder="root" data-level="0">
+                    <div class="folder-header">
+                        <button class="folder-toggle" onclick="toggleFolder('root')">
+                            <i class="fas fa-chevron-down"></i>
                         </button>
-                        <button class="btn-icon action-btn" onclick="deleteFeed('all')" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <i class="folder-icon fas fa-folder" style="color: #f59e0b;"></i>
+                        <span class="folder-name">所有订阅</span>
+                        <span class="folder-count">766</span>
+                        <div class="folder-actions">
+                            <button class="btn-icon action-btn" onclick="editFolder('root')" title="编辑">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon action-btn" onclick="deleteFolder('root')" title="删除">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="feed-item" data-feed="tech">
-                    <i class="feed-icon fas fa-laptop-code" style="color: #8b5cf6;"></i>
-                    <span class="feed-name">技术博客</span>
-                    <span class="feed-count">169</span>
-                    <div class="feed-actions">
-                        <button class="btn-icon action-btn" onclick="editFeed('tech')" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-icon action-btn" onclick="deleteFeed('tech')" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="feed-item" data-feed="dev">
-                    <i class="feed-icon fas fa-users" style="color: #10b981;"></i>
-                    <span class="feed-name">开发者社区</span>
-                    <span class="feed-count">6</span>
-                    <div class="feed-actions">
-                        <button class="btn-icon action-btn" onclick="editFeed('dev')" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-icon action-btn" onclick="deleteFeed('dev')" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="feed-item" data-feed="weekly">
-                    <i class="feed-icon fas fa-newspaper" style="color: #f59e0b;"></i>
-                    <span class="feed-name">前端周刊</span>
-                    <span class="feed-count">99</span>
-                    <div class="feed-actions">
-                        <button class="btn-icon action-btn" onclick="editFeed('weekly')" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-icon action-btn" onclick="deleteFeed('weekly')" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="feed-item" data-feed="podcast">
-                    <i class="feed-icon fas fa-podcast" style="color: #06b6d4;"></i>
-                    <span class="feed-name">声动早咖啡</span>
-                    <span class="feed-count">12</span>
-                    <div class="feed-actions">
-                        <button class="btn-icon action-btn" onclick="editFeed('podcast')" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-icon action-btn" onclick="deleteFeed('podcast')" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                    <div class="folder-children">
+                        <div class="folder-item" data-folder="tech" data-level="1">
+                            <div class="folder-header">
+                                <button class="folder-toggle" onclick="toggleFolder('tech')">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <i class="folder-icon fas fa-folder" style="color: #8b5cf6;"></i>
+                                <span class="folder-name">技术博客</span>
+                                <span class="folder-count">169</span>
+                                <div class="folder-actions">
+                                    <button class="btn-icon action-btn" onclick="editFolder('tech')" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon action-btn" onclick="deleteFolder('tech')" title="删除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="folder-children">
+                                <div class="feed-item" data-feed="tech-react" draggable="true" data-folder="tech">
+                                    <i class="feed-icon fas fa-laptop-code" style="color: #8b5cf6;"></i>
+                                    <span class="feed-name">React官方博客</span>
+                                    <span class="feed-count">89</span>
+                                    <div class="feed-actions">
+                                        <button class="btn-icon action-btn" onclick="editFeed('tech-react')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon action-btn" onclick="deleteFeed('tech-react')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="feed-item" data-feed="tech-js" draggable="true" data-folder="tech">
+                                    <i class="feed-icon fas fa-code" style="color: #8b5cf6;"></i>
+                                    <span class="feed-name">JavaScript Weekly</span>
+                                    <span class="feed-count">80</span>
+                                    <div class="feed-actions">
+                                        <button class="btn-icon action-btn" onclick="editFeed('tech-js')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon action-btn" onclick="deleteFeed('tech-js')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="folder-item" data-folder="community" data-level="1">
+                            <div class="folder-header">
+                                <button class="folder-toggle" onclick="toggleFolder('community')">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <i class="folder-icon fas fa-folder" style="color: #10b981;"></i>
+                                <span class="folder-name">开发者社区</span>
+                                <span class="folder-count">117</span>
+                                <div class="folder-actions">
+                                    <button class="btn-icon action-btn" onclick="editFolder('community')" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon action-btn" onclick="deleteFolder('community')" title="删除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="folder-children">
+                                <div class="feed-item" data-feed="dev-to" draggable="true" data-folder="community">
+                                    <i class="feed-icon fas fa-users" style="color: #10b981;"></i>
+                                    <span class="feed-name">Dev.to社区</span>
+                                    <span class="feed-count">6</span>
+                                    <div class="feed-actions">
+                                        <button class="btn-icon action-btn" onclick="editFeed('dev-to')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon action-btn" onclick="deleteFeed('dev-to')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="feed-item" data-feed="frontend-weekly" draggable="true" data-folder="community">
+                                    <i class="feed-icon fas fa-newspaper" style="color: #f59e0b;"></i>
+                                    <span class="feed-name">前端周刊</span>
+                                    <span class="feed-count">99</span>
+                                    <div class="feed-actions">
+                                        <button class="btn-icon action-btn" onclick="editFeed('frontend-weekly')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon action-btn" onclick="deleteFeed('frontend-weekly')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="feed-item" data-feed="podcast" draggable="true" data-folder="community">
+                                    <i class="feed-icon fas fa-podcast" style="color: #06b6d4;"></i>
+                                    <span class="feed-name">声动早咖啡</span>
+                                    <span class="feed-count">12</span>
+                                    <div class="feed-actions">
+                                        <button class="btn-icon action-btn" onclick="editFeed('podcast')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon action-btn" onclick="deleteFeed('podcast')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feed-item" data-feed="all" draggable="true" data-folder="root">
+                            <i class="feed-icon fas fa-globe" style="color: #8b5cf6;"></i>
+                            <span class="feed-name">所有文章</span>
+                            <span class="feed-count">766</span>
+                            <div class="feed-actions">
+                                <button class="btn-icon action-btn" onclick="editFeed('all')" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon action-btn" onclick="deleteFeed('all')" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -581,7 +666,13 @@ export default async function Page() {
         document.addEventListener('DOMContentLoaded', () => {
             // 添加初始动画
             document.body.classList.add('fade-in');
+            
+            // 初始化文件夹管理器
+            if (typeof folderManager !== 'undefined') {
+                folderManager.render();
+            }
         });
     </script>
+    <script src="modules/folderManager.js"></script>
 </body>
 </html>
