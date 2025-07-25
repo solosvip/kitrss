@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSSkit - 完美复刻版RSS阅读器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="rsskit-perfect.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 保留必要的CSS变量 */
+        :root {
+            --sidebar-width: 18rem;
+            --header-height: 3.5rem;
+            --border-color: hsl(var(--border));
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()" title="切换主题"><i class="fas fa-adjust"></i></div>
+    
+    <div class="app-container">
+        <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">RSSkit</div>
+            <div class="header-actions">
+                <button class="btn-icon tooltip" title="添加订阅" onclick="addFeed()">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="btn-icon tooltip" title="刷新" onclick="refreshFeeds()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="btn-icon tooltip" title="设置" onclick="openSettings()">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="搜索文章..." id="searchInput" oninput="searchArticles(this.value)">
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card" onclick="filterArticles('all')">
+                    <div class="stat-card-header">
+                        <i class="stat-icon fas fa-chart-bar"></i>
+                        <div class="stat-number">766</div>
+                    </div>
+                    <div class="stat-label">ALL</div>
+                </div>
+                <div class="stat-card" onclick="filterArticles('recent')">
+                    <div class="stat-card-header">
+                        <i class="stat-icon fas fa-clock"></i>
+                        <div class="stat-number">11</div>
+                    </div>
+                    <div class="stat-label">RECENT</div>
+                </div>
+                <div class="stat-card" onclick="filterArticles('unread')">
+                    <div class="stat-card-header">
+                        <i class="stat-icon fas fa-envelope"></i>
+                        <div class="stat-number">674</div>
+                    </div>
+                    <div class="stat-label">UNREAD</div>
+                </div>
+                <div class="stat-card" onclick="filterArticles('starred')">
+                    <div class="stat-card-header">
+                        <i class="stat-icon fas fa-star"></i>
+                        <div class="stat-number">5</div>
+                    </div>
+                    <div class="stat-label">STARRED</div>
+                </div>
+            </div>
+            
+            <div class="feeds-section">
+                <div class="feed-item active" data-feed="all">
+                    <i class="feed-icon fas fa-globe" style="color: #8b5cf6;"></i>
+                    <span class="feed-name">所有文章</span>
+                    <span class="feed-count">766</span>
+                    <div class="feed-actions">
+                        <button class="btn-icon action-btn" onclick="editFeed('all')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon action-btn" onclick="deleteFeed('all')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="feed-item" data-feed="tech">
+                    <i class="feed-icon fas fa-laptop-code" style="color: #8b5cf6;"></i>
+                    <span class="feed-name">技术博客</span>
+                    <span class="feed-count">169</span>
+                    <div class="feed-actions">
+                        <button class="btn-icon action-btn" onclick="editFeed('tech')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon action-btn" onclick="deleteFeed('tech')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="feed-item" data-feed="dev">
+                    <i class="feed-icon fas fa-users" style="color: #10b981;"></i>
+                    <span class="feed-name">开发者社区</span>
+                    <span class="feed-count">6</span>
+                    <div class="feed-actions">
+                        <button class="btn-icon action-btn" onclick="editFeed('dev')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon action-btn" onclick="deleteFeed('dev')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="feed-item" data-feed="weekly">
+                    <i class="feed-icon fas fa-newspaper" style="color: #f59e0b;"></i>
+                    <span class="feed-name">前端周刊</span>
+                    <span class="feed-count">99</span>
+                    <div class="feed-actions">
+                        <button class="btn-icon action-btn" onclick="editFeed('weekly')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon action-btn" onclick="deleteFeed('weekly')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="feed-item" data-feed="podcast">
+                    <i class="feed-icon fas fa-podcast" style="color: #06b6d4;"></i>
+                    <span class="feed-name">声动早咖啡</span>
+                    <span class="feed-count">12</span>
+                    <div class="feed-actions">
+                        <button class="btn-icon action-btn" onclick="editFeed('podcast')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon action-btn" onclick="deleteFeed('podcast')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        function editFeed(feedId) {
+            event.stopPropagation();
+            console.log('编辑订阅源:', feedId);
+            // 这里可以添加编辑订阅源的逻辑
+            alert('编辑订阅源: ' + feedId);
+        }
+
+        function deleteFeed(feedId) {
+            event.stopPropagation();
+            console.log('删除订阅源:', feedId);
+            // 这里可以添加删除订阅源的逻辑
+            if (confirm('确定要删除这个订阅源吗？')) {
+                alert('已删除订阅源: ' + feedId);
+            }
+        }
+
+        function selectFeed(feedId) {
+            // 移除所有active类
+            document.querySelectorAll('.feed-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 添加active类到选中的feed
+            const selectedFeed = document.querySelector(`[data-feed="${feedId}"]`);
+            if (selectedFeed) {
+                selectedFeed.classList.add('active');
+            }
+            
+            console.log('选择订阅源:', feedId);
+        }
+    </script>
+
+    <!-- 文章列表 -->
+    <div class="article-list" id="articleList">
+        <div class="list-header">
+            <h2>所有文章</h2>
+            <div class="list-actions">
+                <button class="btn-icon" onclick="sortArticles()" title="排序">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7h18"></path>
+                        <path d="M6 12h12"></path>
+                        <path d="M9 17h6"></path>
+                    </svg>
+                    排序 ↓
+                </button>
+                <button class="btn-icon" onclick="markAllRead()" title="全部已读">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    全部已读
+                </button>
+            </div>
+        </div>
+        
+        <div class="list-content">
+            <div class="article-item active unread" onclick="selectArticle(0)">
+                <div class="article-title">深入理解React Server Components</div>
+                <div class="article-excerpt">探索React服务器组件如何改变我们构建React应用程序的方式，以及它带来的性能优化和开发体验提升。了解RSC的工作原理、优势和使用场景。</div>
+                <div class="article-meta">
+                    <span>React博客</span>
+                    <span>2小时前</span>
+                </div>
+            </div>
+            
+            <div class="article-item unread" onclick="selectArticle(1)">
+                <div class="article-title">现代Web开发的未来趋势</div>
+                <div class="article-excerpt">从WebAssembly到边缘计算，从AI集成到微前端架构，探讨Web开发领域的最新趋势和技术发展方向。了解如何为未来的技术变革做好准备。</div>
+                <div class="article-meta">
+                    <span>Dev.to</span>
+                    <span>5小时前</span>
+                </div>
+            </div>
+            
+            <div class="article-item" onclick="selectArticle(2)">
+                <div class="article-title">构建可扩展的CSS架构</div>
+                <div class="article-excerpt">分享在大型应用中创建可维护和可扩展CSS系统的最佳实践，包括BEM、CSS Modules和原子化CSS的对比分析。学习如何构建健壮的样式系统。</div>
+                <div class="article-meta">
+                    <span>前端周刊</span>
+                    <span>1天前</span>
+                </div>
+            </div>
+            
+            <div class="article-item unread" onclick="selectArticle(3)">
+                <div class="article-title">TypeScript 5.0新特性详解</div>
+                <div class="article-excerpt">深入解析TypeScript 5.0带来的重要更新，包括装饰器元数据、const类型参数、支持多个配置文件等新功能。了解如何升级和利用这些新特性。</div>
+                <div class="article-meta">
+                    <span>技术博客</span>
+                    <span>2天前</span>
+                </div>
+            </div>
+            
+            <div class="article-item starred" onclick="selectArticle(4)">
+                <div class="article-title">微前端架构实践指南</div>
+                <div class="article-excerpt">从理论到实践，全面介绍微前端架构的设计原则、技术选型和落地实施。包含真实的项目案例和经验总结，帮助团队成功采用微前端。</div>
+                <div class="article-meta">
+                    <span>开发者社区</span>
+                    <span>3天前</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文章内容 -->
+    <div class="article-content">
+        <div class="article-content-header">
+            <h1>深入理解React Server Components</h1>
+            <div class="meta-info">
+                <span>作者：React团队</span> • 
+                <span>来源：React博客</span> • 
+                <span>发布时间：2024年1月15日</span> • 
+                <span>阅读时间：8分钟</span>
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="btn-icon" onclick="toggleStar()" title="收藏">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    收藏
+                </button>
+                <button class="btn-icon" onclick="markRead()" title="标记已读">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    标记已读
+                </button>
+            </div>
+        </div>
+        
+        <div class="article-content-body">
+            <p>React Server Components (RSC) 代表了React生态系统的一次重大演进。它们允许开发者在服务器上渲染组件，只将必要的交互部分发送到客户端，从而显著提升了应用性能和开发体验。</p>
+
+            <h2>RSC的核心优势</h2>
+            <ul>
+                <li><strong>减少bundle大小：</strong>服务器组件的代码不会包含在客户端bundle中</li>
+                <li><strong>直接访问数据源：</strong>可以直接在组件中访问数据库和文件系统</li>
+                <li><strong>自动代码分割：</strong>每个服务器组件都是一个独立的chunk</li>
+                <li><strong>零配置SSR：</strong>无需额外配置即可获得服务端渲染的好处</li>
+            </ul>
+
+            <h2>工作原理</h2>
+            <p>React Server Components通过一种新的渲染架构工作：</p>
+            <ol>
+                <li>服务器渲染静态内容</li>
+                <li>识别需要客户端交互的部分</li>
+                <li>发送轻量级的"指令"而不是完整HTML</li>
+                <li>客户端合并和hydrate交互部分</li>
+            </ol>
+
+            <h2>实际应用场景</h2>
+            <p>RSC特别适合以下场景：</p>
+            <ul>
+                <li>内容为主的页面（博客、文档）</li>
+                <li>需要频繁数据更新的仪表盘</li>
+                <li>大型电商网站的产品页面</li>
+                <li>需要SEO优化的营销页面</li>
+            </ul>
+
+            <h2>开始使用</h2>
+            <p>要开始使用React Server Components，你需要：</p>
+            <pre><code>// app/page.js (Server Component)
+import { getData } from './data'
+
+export default async function Page() {
+  const data = await getData()
+  
+  return (
+    <div>
+      <h1>{data.title}</h1>
+      <InteractiveComponent />
+    </div>
+  )
+}</code></pre>
+
+            <p>React Server Components正在重新定义我们构建React应用的方式，它们提供了更好的性能、更简单的架构和更优秀的开发体验。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+        // 主题切换
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            if (newTheme === 'dark') {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 初始化主题
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+
+        // 选择文章
+        function selectArticle(index) {
+            const articles = document.querySelectorAll('.article-item');
+            articles.forEach((article, i) => {
+                article.classList.toggle('active', i === index);
+            });
+            
+            // 模拟加载文章内容
+            loadArticleContent(index);
+        }
+
+        // 加载文章内容
+        function loadArticleContent(index) {
+            const articleContents = [
+                {
+                    title: "深入理解React Server Components",
+                    content: `
+                        <p>React Server Components (RSC) 代表了React生态系统的一次重大演进。它们允许开发者在服务器上渲染组件，只将必要的交互部分发送到客户端，从而显著提升了应用性能和开发体验。</p>
+
+                        <h2>RSC的核心优势</h2>
+                        <ul>
+                            <li><strong>减少bundle大小：</strong>服务器组件的代码不会包含在客户端bundle中</li>
+                            <li><strong>直接访问数据源：</strong>可以直接在组件中访问数据库和文件系统</li>
+                            <li><strong>自动代码分割：</strong>每个服务器组件都是一个独立的chunk</li>
+                            <li><strong>零配置SSR：</strong>无需额外配置即可获得服务端渲染的好处</li>
+                        </ul>
+
+                        <h2>工作原理</h2>
+                        <p>React Server Components通过一种新的渲染架构工作：</p>
+                        <ol>
+                            <li>服务器渲染静态内容</li>
+                            <li>识别需要客户端交互的部分</li>
+                            <li>发送轻量级的"指令"而不是完整HTML</li>
+                            <li>客户端合并和hydrate交互部分</li>
+                        </ol>
+                    `
+                },
+                {
+                    title: "现代Web开发的未来趋势",
+                    content: `
+                        <p>Web开发领域正在经历前所未有的变革。从WebAssembly到边缘计算，从AI集成到微前端架构，新技术层出不穷，为开发者带来了更多可能性。</p>
+
+                        <h2>关键技术趋势</h2>
+                        <ul>
+                            <li><strong>WebAssembly (WASM)：</strong>让Web应用获得接近原生的性能</li>
+                            <li><strong>边缘计算：</strong>将计算能力推向用户更近的地方</li>
+                            <li><strong>AI集成：</strong>智能化的用户体验和开发工具</li>
+                            <li><strong>微前端：</strong>大型应用的可扩展架构方案</li>
+                        </ul>
+
+                        <h2>开发者需要关注的方向</h2>
+                        <p>面对这些变化，开发者需要：</p>
+                        <ol>
+                            <li>持续学习新技术栈</li>
+                            <li>理解性能优化的深层原理</li>
+                            <li>掌握跨平台开发技能</li>
+                            <li>关注用户体验和可访问性</li>
+                        </ol>
+                    `
+                },
+                {
+                    title: "构建可扩展的CSS架构",
+                    content: `
+                        <p>在大型应用中，CSS架构的设计直接影响项目的可维护性和扩展性。本文将深入探讨几种主流的CSS架构方案。</p>
+
+                        <h2>主流方案对比</h2>
+                        <ul>
+                            <li><strong>BEM (Block Element Modifier)：</strong>命名规范，适合组件化开发</li>
+                            <li><strong>CSS Modules：</strong>作用域隔离，避免样式冲突</li>
+                            <li><strong>原子化CSS：</strong>如Tailwind CSS，提供极高的灵活性</li>
+                            <li><strong>CSS-in-JS：</strong>样式与组件紧密结合</li>
+                        </ul>
+
+                        <h2>最佳实践建议</h2>
+                        <ol>
+                            <li>建立清晰的设计系统</li>
+                            <li>使用CSS变量管理主题</li>
+                            <li>实施代码审查机制</li>
+                            <li>自动化测试样式变更</li>
+                        </ol>
+                    `
+                }
+            ];
+            
+            const content = articleContents[index] || articleContents[0];
+            document.querySelector('.article-content h1').textContent = content.title;
+            document.querySelector('.article-content-body').innerHTML = content.content;
+            
+            // 添加淡入动画
+            document.querySelector('.article-content').classList.add('fade-in');
+            setTimeout(() => {
+                document.querySelector('.article-content').classList.remove('fade-in');
+            }, 300);
+        }
+
+        // 搜索文章
+        function searchArticles(query) {
+            const articles = document.querySelectorAll('.article-item');
+            articles.forEach(article => {
+                const title = article.querySelector('.article-title').textContent.toLowerCase();
+                const excerpt = article.querySelector('.article-excerpt').textContent.toLowerCase();
+                const matches = title.includes(query.toLowerCase()) || excerpt.includes(query.toLowerCase());
+                article.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // 过滤文章
+        function filterArticles(type) {
+            console.log(`Filtering by: ${type}`);
+            // 这里可以添加实际的过滤逻辑
+        }
+
+        // 选择订阅源
+        function selectFeed(feedId) {
+            const feeds = document.querySelectorAll('.feed-item');
+            feeds.forEach(feed => feed.classList.remove('active'));
+            event.target.closest('.feed-item').classList.add('active');
+            
+            // 更新标题
+            const feedName = event.target.closest('.feed-item').querySelector('.feed-name').textContent;
+            document.querySelector('.main-header h2').textContent = feedName;
+        }
+
+        // 其他功能函数
+        function addFeed() {
+            alert('添加订阅源功能开发中...');
+        }
+
+        function refreshFeeds() {
+            // 模拟刷新动画
+            const button = event.target.closest('button');
+            button.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                button.style.transform = 'rotate(0deg)';
+            }, 300);
+        }
+
+        function openSettings() {
+            alert('设置功能开发中...');
+        }
+
+        function sortArticles() {
+            const articles = document.querySelectorAll('.article-item');
+            const articleArray = Array.from(articles);
+            
+            // 按时间排序（最新的在前）
+            articleArray.sort((a, b) => {
+                const timeA = a.querySelector('.article-meta span:last-child').textContent;
+                const timeB = b.querySelector('.article-meta span:last-child').textContent;
+                
+                // 简单的时间排序逻辑
+                const timeOrder = {'小时前': 1, '天前': 2, '周前': 3};
+                const timeAVal = timeA.includes('小时') ? 1 : timeA.includes('天') ? 2 : 3;
+                const timeBVal = timeB.includes('小时') ? 1 : timeB.includes('天') ? 2 : 3;
+                
+                return timeAVal - timeBVal;
+            });
+            
+            // 重新排列DOM
+            const listContent = document.querySelector('.list-content');
+            articleArray.forEach(article => listContent.appendChild(article));
+        }
+
+        function markAllRead() {
+            document.querySelectorAll('.article-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // 添加视觉反馈
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 已标记';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 1000);
+        }
+
+        function toggleStar() {
+            const activeArticle = document.querySelector('.article-item.active');
+            if (activeArticle) {
+                activeArticle.classList.toggle('starred');
+                
+                const button = event.target.closest('button');
+                const isStarred = activeArticle.classList.contains('starred');
+                const svg = button.querySelector('svg');
+                
+                if (isStarred) {
+                    svg.style.fill = 'currentColor';
+                    svg.style.color = '#fbbf24';
+                } else {
+                    svg.style.fill = 'none';
+                    svg.style.color = '';
+                }
+            }
+        }
+
+        function markRead() {
+            const activeArticle = document.querySelector('.article-item.active');
+            if (activeArticle) {
+                activeArticle.classList.remove('unread');
+                
+                // 添加视觉反馈
+                const button = event.target.closest('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 已读';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 1000);
+            }
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'j' && !e.target.matches('input')) {
+                // 下一个文章
+                const active = document.querySelector('.article-item.active');
+                const next = active?.nextElementSibling || document.querySelector('.article-item');
+                if (next) next.click();
+            }
+            
+            if (e.key === 'k' && !e.target.matches('input')) {
+                // 上一个文章
+                const active = document.querySelector('.article-item.active');
+                const prev = active?.previousElementSibling || document.querySelector('.article-item:last-child');
+                if (prev) prev.click();
+            }
+            
+            if (e.key === 'Escape') {
+                document.getElementById('searchInput').blur();
+            }
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 添加初始动画
+            document.body.classList.add('fade-in');
+        });
+    </script>
+</body>
+</html>
