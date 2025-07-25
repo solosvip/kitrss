@@ -329,6 +329,15 @@ body {
     height: 34px;
 }
 
+/* 文件夹展开后的间距调整 */
+.folder-children:not(.collapsed) .feed-item:first-child {
+    margin-top: 4px;
+}
+
+.folder-children:not(.collapsed) .feed-item:last-child {
+    margin-bottom: 4px;
+}
+
 .feed-item:hover {
     background: #ebebeb;
 }
