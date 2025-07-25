@@ -318,6 +318,9 @@ body {
 /* 基于层级的缩进 - 简化为单层，统一缩进 */
 .folder-item > .folder-header {
     padding-left: 5px;
+    height: 34px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .feed-item {
